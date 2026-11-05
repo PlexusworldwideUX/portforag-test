@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { RecentWorkItem } from "@/lib/recent-work";
 import type { Project } from "@/lib/rag";
-import { OPENING, SCIFI } from "@/lib/config";
+import { HIRING_ASKS, OPENING, SCIFI } from "@/lib/config";
 
 type Msg = { role: "user" | "model"; text: string; error?: boolean; suggestions?: string[]; ids?: string[] };
 type Frame =
@@ -13,6 +13,28 @@ type Frame =
   | { kind: "work"; item: RecentWorkItem };
 
 const PAGE = 3;
+
+const CHIP_COUNT = 6;
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function nextChipBatch(used: string[]): { batch: string[]; used: string[] } {
+  let remaining = HIRING_ASKS.filter((q) => !used.includes(q));
+  let nextUsed = used;
+  if (remaining.length < CHIP_COUNT) {
+    remaining = [...HIRING_ASKS];
+    nextUsed = [];
+  }
+  const batch = shuffle(remaining).slice(0, CHIP_COUNT);
+  return { batch, used: [...nextUsed, ...batch] };
+}
 const ABOUT = {
   title: "About",
   body: [
@@ -111,6 +133,8 @@ export default function Landing({
   const [stack, setStack] = useState<Frame[]>([]);
   const [chatMode, setChatMode] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([]);
+  const [homeChips, setHomeChips] = useState<string[]>(() => OPENING.slice(0, CHIP_COUNT));
+  const [usedChips, setUsedChips] = useState<string[]>(() => OPENING.slice(0, CHIP_COUNT));
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
   const [line, setLine] = useState("");
@@ -121,6 +145,18 @@ export default function Landing({
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
   }, []);
+
+  useEffect(() => {
+    const { batch, used } = nextChipBatch([]);
+    setHomeChips(batch);
+    setUsedChips(used);
+  }, []);
+
+  function refreshHomeChips() {
+    const { batch, used } = nextChipBatch(usedChips);
+    setHomeChips(batch);
+    setUsedChips(used);
+  }
   useEffect(() => {
     end.current?.scrollIntoView({ behavior: "smooth" });
   }, [msgs.length, busy, chatMode]);
@@ -321,15 +357,17 @@ export default function Landing({
 
       {chatMode ? (
         <>
-          <button
-            type="button"
-            onClick={() => setChatMode(false)}
-            className="mt-4 self-start min-h-11 text-sm font-medium text-blue-600 dark:text-blue-400"
-          >
-            ‹ Back to view mode
-          </button>
+          <div className="sticky top-[57px] z-20 -mx-4 border-b border-black/10 bg-[#f5f5f7]/90 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-black/70 sm:-mx-6 sm:px-6">
+            <button
+              type="button"
+              onClick={() => setChatMode(false)}
+              className="self-start min-h-11 text-sm font-medium text-blue-600 dark:text-blue-400"
+            >
+              ‹ Back to view mode
+            </button>
+          </div>
           <section className="pt-4 sm:pt-6">
-            <h1 className="text-4xl font-bold tracking-tight text-blue-600 dark:text-blue-400 sm:text-5xl">Ask anything you’d like</h1>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Ask anything you’d like</h1>
             <p className="mt-3 max-w-2xl text-lg text-neutral-500">Learn anything about me. Well, almost.</p>
           </section>
           <div className="flex min-h-0 flex-1 flex-col">{thread}</div>
@@ -352,9 +390,23 @@ export default function Landing({
           </section>
 
           <section className="mt-14 border-t border-black/10 pt-8 dark:border-white/10">
-            <h2 className="text-xl font-semibold text-blue-600 dark:text-blue-400">Ask anything you’d like</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">Ask anything you’d like</h2>
+              <button
+                type="button"
+                onClick={refreshHomeChips}
+                aria-label="Refresh suggested questions"
+                title="New questions"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-neutral-500 ring-1 ring-black/10 transition hover:bg-white hover:text-neutral-800 dark:ring-white/10 dark:hover:bg-neutral-900"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M20 12a8 8 0 1 1-2.34-5.66" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M20 4v5h-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              {OPENING.map((s) => (
+              {homeChips.map((s) => (
                 <button
                   key={s}
                   type="button"
