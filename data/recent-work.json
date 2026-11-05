@@ -1,0 +1,110 @@
+{
+  "source": "https://github.com/tangiblethinking/AppProtoNeoRouter/blob/main/vercel.json",
+  "items": [
+    {
+      "id": "interview",
+      "path": "/interview",
+      "url": "https://interview-eight-pi.vercel.app",
+      "title": "Interview",
+      "blurb": "Interactive interview experience and flow exploration."
+    },
+    {
+      "id": "jobs",
+      "path": "/jobs",
+      "url": "https://ats-x2-prod-main.vercel.app/jobs",
+      "title": "ATS Jobs",
+      "blurb": "Job search and ATS alignment prototype."
+    },
+    {
+      "id": "cart",
+      "path": "/cart",
+      "url": "https://moderncheckout.vercel.app",
+      "title": "Modern Checkout",
+      "blurb": "Modern e-commerce checkout patterns."
+    },
+    {
+      "id": "oma",
+      "path": "/oma",
+      "url": "https://oma-ashen.vercel.app",
+      "title": "OMA",
+      "blurb": "OMA product experience prototype."
+    },
+    {
+      "id": "ia",
+      "path": "/ia",
+      "url": "https://infoarchdesign.vercel.app",
+      "title": "Information Architecture",
+      "blurb": "IA design exploration and structure."
+    },
+    {
+      "id": "vlabs",
+      "path": "/vlabs",
+      "url": "https://virtual-labs-mu.vercel.app",
+      "title": "Virtual Labs",
+      "blurb": "Virtual lab learning environments."
+    },
+    {
+      "id": "laws",
+      "path": "/laws",
+      "url": "https://uxlegal-git-main-mrkhrisk-5412s-projects.vercel.app",
+      "title": "UX Legal",
+      "blurb": "Legal UX patterns and compliance-minded design."
+    },
+    {
+      "id": "ape",
+      "path": "/ape",
+      "url": "https://ape-x-apple-cl-007v1-gemini-001.vercel.app/ape",
+      "title": "Ape-X Apple",
+      "blurb": "Job search experience with Apple HIG design system."
+    },
+    {
+      "id": "portfolioa32",
+      "path": "/portfolioa32",
+      "url": "https://appprotoneov001ai.vercel.app",
+      "title": "Portfolio A32",
+      "blurb": "AI-assisted portfolio prototype."
+    },
+    {
+      "id": "designops",
+      "path": "/designops",
+      "url": "https://design-ops-case-study.vercel.app",
+      "title": "DesignOps Case Study",
+      "blurb": "Design operations case study."
+    },
+    {
+      "id": "ecomm",
+      "path": "/ecomm",
+      "url": "https://director-case-study-ux-bgoals.vercel.app",
+      "title": "Director Case Study: UX Business Goals",
+      "blurb": "Director-level UX and business goals case study."
+    },
+    {
+      "id": "uxtrans",
+      "path": "/uxtrans",
+      "url": "https://company-ux-transform.vercel.app",
+      "title": "Company UX Transform",
+      "blurb": "Company-wide UX transformation story."
+    },
+    {
+      "id": "discovery",
+      "path": "/discovery",
+      "url": "https://teststudynew.vercel.app",
+      "title": "Discovery Study",
+      "blurb": "Discovery research study experience."
+    },
+    {
+      "id": "persona",
+      "path": "/persona",
+      "url": "https://persongratadata.vercel.app",
+      "title": "Persona Data",
+      "blurb": "Persona research and data visualization."
+    },
+    {
+      "id": "collaboration",
+      "path": "/collaboration",
+      "url": "https://opodesignonovo.vercel.app",
+      "title": "Collaboration Design",
+      "blurb": "Collaborative design workflow prototype."
+    }
+  ]
+}

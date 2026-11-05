@@ -1,7 +1,10 @@
-import { index } from "@/lib/rag";
-import { OPENING, SCIFI } from "@/lib/config";
-import Chat from "@/components/Chat";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import Landing from "@/components/Landing";
+import { getRecentWork } from "@/lib/recent-work";
+
 export default function Page() {
-  const projects = index().projects;
-  return <Chat projects={projects} opening={OPENING} scifi={SCIFI} />;
+  const resumeMarkdown = readFileSync(join(process.cwd(), "data/resume.md"), "utf8");
+  const recentWork = getRecentWork();
+  return <Landing resumeMarkdown={resumeMarkdown} recentWork={recentWork} />;
 }

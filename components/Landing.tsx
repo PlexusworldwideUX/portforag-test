@@ -1,0 +1,353 @@
+"use client";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { RecentWorkItem } from "@/lib/recent-work";
+import { OPENING, SCIFI } from "@/lib/config";
+
+type Msg = { role: "user" | "model"; text: string; error?: boolean; suggestions?: string[] };
+type Frame =
+  | { kind: "resume" }
+  | { kind: "about" }
+  | { kind: "recent"; shown: number }
+  | { kind: "work"; item: RecentWorkItem };
+
+const PAGE = 3;
+const ABOUT = {
+  title: "About",
+  body: [
+    "Christopher Kenreigh is a Principal Product Designer and B2B SaaS architect focused on design systems, design-to-code pipelines, data-heavy dashboards, and AI-native (RAG) workflows.",
+    "He currently works at Plexus Worldwide on design system governance, Figma-to-React pipelines, and enterprise content tools. Earlier work spans Freeport-McMoRan operational dashboards, OpenTech Alliance kiosk flows, and Siemens industrial design systems.",
+    "Ask anything in the chat below — resume, case studies, skills, or what he’s building now.",
+  ],
+};
+
+function mdLite(src: string) {
+  return src
+    .split(/\n\n+/)
+    .map((block) => {
+      const lines = block.split("\n");
+      if (lines[0].startsWith("# ")) return `<h1 class="text-2xl font-semibold mb-3">${esc(lines[0].slice(2))}</h1>` + lines.slice(1).map(lineHtml).join("");
+      if (lines[0].startsWith("## ")) return `<h2 class="text-lg font-semibold mt-6 mb-2">${esc(lines[0].slice(3))}</h2>` + lines.slice(1).map(lineHtml).join("");
+      return `<p class="mb-3 text-neutral-700 dark:text-neutral-300 leading-relaxed">${lines.map(inline).join("<br/>")}</p>`;
+    })
+    .join("");
+}
+function lineHtml(l: string) {
+  if (l.startsWith("- ")) return `<li class="ml-5 list-disc text-neutral-700 dark:text-neutral-300">${inline(l.slice(2))}</li>`;
+  return inline(l);
+}
+function inline(s: string) {
+  return esc(s).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+}
+function esc(s: string) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+export default function Landing({
+  resumeMarkdown,
+  recentWork,
+}: {
+  resumeMarkdown: string;
+  recentWork: RecentWorkItem[];
+}) {
+  const [dark, setDark] = useState(false);
+  const [stack, setStack] = useState<Frame[]>([]);
+  const [msgs, setMsgs] = useState<Msg[]>([]);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
+  const [line, setLine] = useState("");
+  const end = useRef<HTMLDivElement>(null);
+  const top = stack[stack.length - 1] || null;
+
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+  useEffect(() => {
+    end.current?.scrollIntoView({ behavior: "smooth" });
+  }, [msgs.length, busy]);
+  useEffect(() => {
+    if (!busy) return;
+    setLine(SCIFI[Math.floor(Math.random() * SCIFI.length)]);
+    const t = setInterval(() => setLine(SCIFI[Math.floor(Math.random() * SCIFI.length)]), 2500);
+    return () => clearInterval(t);
+  }, [busy]);
+
+  const resumeHtml = useMemo(() => mdLite(resumeMarkdown), [resumeMarkdown]);
+
+  const toggle = () => {
+    const d = !dark;
+    setDark(d);
+    document.documentElement.classList.toggle("dark", d);
+    localStorage.theme = d ? "dark" : "light";
+  };
+  const push = (f: Frame) => setStack((s) => [...s, f]);
+  const pop = () => setStack((s) => s.slice(0, -1));
+  const closeAll = () => setStack([]);
+
+  async function ask(q: string) {
+    q = q.trim();
+    if (!q || busy) return;
+    setInput("");
+    const next = [...msgs, { role: "user" as const, text: q }];
+    setMsgs(next);
+    setBusy("Searching the projects…");
+    let m: Msg;
+    try {
+      const r = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          message: q,
+          conversationId: "landing",
+          history: next.slice(-6).map(({ role, text }) => ({ role, text })),
+        }),
+      });
+      const j = await r.json();
+      m = r.ok
+        ? { role: "model", text: j.answer, suggestions: j.suggestions }
+        : { role: "model", text: j.message || "Something went wrong.", error: true, suggestions: OPENING.slice(0, 3) };
+    } catch {
+      m = { role: "model", text: "Network hiccup. Please try again.", error: true, suggestions: OPENING.slice(0, 3) };
+    }
+    setBusy(null);
+    setMsgs((prev) => [...prev, m]);
+  }
+
+  const cards = [
+    {
+      id: "resume",
+      title: "Resume",
+      body: "Experience, skills, and the arc from design systems to AI-native product work.",
+      onView: () => push({ kind: "resume" }),
+    },
+    {
+      id: "recent",
+      title: "Recent Work",
+      body: "Live deployments from the AppProto router — case studies, prototypes, and experiments.",
+      onView: () => push({ kind: "recent", shown: PAGE }),
+    },
+    {
+      id: "about",
+      title: "About",
+      body: "Who Christopher is, how he works, and what to ask next.",
+      onView: () => push({ kind: "about" }),
+    },
+  ];
+
+  return (
+    <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-4 pb-10 sm:px-6">
+      <header className="sticky top-0 z-20 -mx-4 flex items-center justify-between gap-3 border-b border-black/10 bg-[#f5f5f7]/90 px-4 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-black/70 sm:-mx-6 sm:px-6">
+        <Link href="/contact" className="min-h-11 content-center text-sm font-medium text-blue-600 dark:text-blue-400">
+          Contact
+        </Link>
+        <div className="text-center">
+          <div className="text-[15px] font-semibold">Christopher Kenreigh</div>
+          <div className="text-xs text-neutral-500">Product Design, Product Management, Product Strategy</div>
+        </div>
+        <button onClick={toggle} aria-label="Toggle dark mode" className="min-h-11 min-w-11 rounded-full text-lg">
+          {dark ? "☀︎" : "☾"}
+        </button>
+      </header>
+
+      <section className="pt-10 sm:pt-14">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Designs for easy mode!</h1>
+        <p className="mt-3 max-w-2xl text-lg text-neutral-500">Learn anything about me. Well, almost.</p>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="text-xl font-semibold text-blue-600 dark:text-blue-400">Browse and Explore</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          {cards.map((c) => (
+            <article
+              key={c.id}
+              className="group flex flex-col rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5 transition duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:bg-neutral-900 dark:ring-white/10"
+            >
+              <div className="mb-4 flex aspect-square items-center justify-center rounded-xl bg-neutral-100 text-neutral-400 dark:bg-neutral-800">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                  <circle cx="8.5" cy="10" r="1.5" fill="currentColor" />
+                  <path d="M3 16l5-4 4 3 3-2 6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold">{c.title}</h3>
+              <p className="mt-2 flex-1 text-sm text-neutral-500">{c.body}</p>
+              <button
+                type="button"
+                onClick={c.onView}
+                className="mt-4 inline-flex min-h-10 w-fit items-center gap-1 rounded-lg bg-neutral-100 px-3 text-sm font-medium text-neutral-800 transition group-hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:group-hover:bg-neutral-700"
+              >
+                View <span aria-hidden>›</span>
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-14 border-t border-black/10 pt-8 dark:border-white/10">
+        <h2 className="text-xl font-semibold text-blue-600 dark:text-blue-400">Ask anything you’d like</h2>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {OPENING.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => ask(s)}
+              className="min-h-11 rounded-full bg-white px-4 text-sm ring-1 ring-black/10 hover:bg-neutral-50 dark:bg-neutral-900 dark:ring-white/10"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+        <div className="mt-5 space-y-4">
+          {msgs.map((m, i) =>
+            m.role === "user" ? (
+              <div key={i} className="flex justify-end">
+                <div className="max-w-[85%] rounded-2xl rounded-br-md bg-blue-600 px-4 py-2.5 text-white">{m.text}</div>
+              </div>
+            ) : (
+              <div key={i} className="space-y-3">
+                <div className={`max-w-[95%] whitespace-pre-wrap rounded-2xl rounded-bl-md px-4 py-3 ${m.error ? "bg-amber-50 dark:bg-amber-950/40" : "bg-white dark:bg-neutral-900"}`}>
+                  {m.text}
+                </div>
+                {m === msgs[msgs.length - 1] && m.suggestions && (
+                  <div className="flex flex-wrap gap-2">
+                    {m.suggestions.map((s) => (
+                      <button key={s} type="button" onClick={() => ask(s)} className="min-h-11 rounded-full bg-white px-4 text-sm ring-1 ring-black/10 dark:bg-neutral-900 dark:ring-white/10">
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          )}
+          {busy && (
+            <div role="status" aria-live="polite" className="text-sm text-neutral-500">
+              <div className="font-medium">{busy}</div>
+              <div className="italic">{line}</div>
+            </div>
+          )}
+          <div ref={end} />
+        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            ask(input);
+          }}
+          className="mt-4"
+        >
+          <div className="flex gap-2">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              maxLength={500}
+              disabled={!!busy}
+              placeholder={busy ? "Thinking…" : "Ask anything..."}
+              aria-label="Message"
+              className="min-h-11 flex-1 rounded-full bg-white px-4 outline-none ring-1 ring-black/10 focus:ring-blue-500 dark:bg-neutral-900 dark:ring-white/10"
+            />
+            <button disabled={!!busy || !input.trim()} className="min-h-11 rounded-full bg-blue-500 px-5 font-medium text-white disabled:opacity-40">
+              Send
+            </button>
+          </div>
+          <p className="mt-3 text-center text-[11px] text-neutral-500">Chat history stays on your device. Questions are sent to Google Gemini to produce answers.</p>
+        </form>
+      </section>
+
+      {top && (
+        <div className="fixed inset-0 z-40 flex items-stretch justify-center bg-black/45 p-2 sm:p-4" role="dialog" aria-modal="true">
+          <div className="flex h-full w-full max-w-6xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-neutral-950">
+            <div className="flex items-center gap-2 border-b border-black/10 px-3 py-2 dark:border-white/10">
+              <button type="button" onClick={pop} className="min-h-11 rounded-full px-3 text-sm font-medium text-blue-600">
+                {stack.length > 1 ? "Back" : "Close"}
+              </button>
+              <div className="min-w-0 flex-1 truncate text-center text-sm font-semibold">
+                {top.kind === "resume" && "Resume"}
+                {top.kind === "about" && "About"}
+                {top.kind === "recent" && "Recent Work"}
+                {top.kind === "work" && top.item.title}
+              </div>
+              {top.kind === "work" && (
+                <a href={top.item.url} target="_blank" rel="noreferrer" className="min-h-11 content-center px-3 text-sm text-blue-600">
+                  Open ↗
+                </a>
+              )}
+              <button type="button" onClick={closeAll} aria-label="Close all" className="min-h-11 min-w-11 text-xl">
+                ✕
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-auto">
+              {top.kind === "resume" && (
+                <div className="prose-neutral mx-auto max-w-3xl p-6" dangerouslySetInnerHTML={{ __html: resumeHtml }} />
+              )}
+              {top.kind === "about" && (
+                <div className="mx-auto max-w-2xl space-y-4 p-6">
+                  <h2 className="text-2xl font-semibold">{ABOUT.title}</h2>
+                  {ABOUT.body.map((p) => (
+                    <p key={p} className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                      {p}
+                    </p>
+                  ))}
+                </div>
+              )}
+              {top.kind === "recent" && (
+                <div className="p-4 sm:p-6">
+                  <p className="mb-4 text-sm text-neutral-500">Live deployments from AppProtoNeoRouter. Showing {Math.min(top.shown, recentWork.length)} of {recentWork.length}.</p>
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    {recentWork.slice(0, top.shown).map((item) => (
+                      <article key={item.id} className="flex flex-col rounded-2xl bg-neutral-50 p-4 ring-1 ring-black/5 dark:bg-neutral-900 dark:ring-white/10">
+                        <div className="mb-3 flex aspect-[4/3] items-center justify-center rounded-xl bg-neutral-200/70 text-neutral-400 dark:bg-neutral-800">
+                          <span className="text-xs font-medium uppercase tracking-wide">{item.path}</span>
+                        </div>
+                        <h3 className="font-semibold">{item.title}</h3>
+                        <p className="mt-1 flex-1 text-sm text-neutral-500">{item.blurb}</p>
+                        <button
+                          type="button"
+                          onClick={() => push({ kind: "work", item })}
+                          className="mt-3 inline-flex min-h-10 w-fit items-center gap-1 rounded-lg bg-white px-3 text-sm font-medium ring-1 ring-black/10 dark:bg-neutral-800 dark:ring-white/10"
+                        >
+                          View <span aria-hidden>›</span>
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+                  {top.shown < recentWork.length && (
+                    <div className="mt-6 flex justify-center">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setStack((s) => {
+                            const copy = [...s];
+                            const i = copy.length - 1;
+                            const cur = copy[i];
+                            if (cur?.kind === "recent") copy[i] = { kind: "recent", shown: cur.shown + PAGE };
+                            return copy;
+                          })
+                        }
+                        className="min-h-11 rounded-full bg-blue-600 px-5 text-sm font-medium text-white"
+                      >
+                        Load more
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+              {top.kind === "work" && (
+                <div className="flex h-full min-h-[70dvh] flex-col">
+                  <iframe
+                    src={top.item.url}
+                    title={top.item.title}
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                    className="min-h-0 w-full flex-1 bg-neutral-100 dark:bg-black"
+                  />
+                  <p className="border-t border-black/10 px-4 py-2 text-xs text-neutral-500 dark:border-white/10">
+                    If the preview is blank, the site blocks embedding — use Open ↗.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
