@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Inter, system-ui, sans-serif; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+@keyframes up { from { transform: translateY(100%) } to { transform: translateY(0) } }
+.sheet { animation: up .28s cubic-bezier(.2,.8,.2,1); }

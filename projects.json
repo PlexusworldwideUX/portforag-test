@@ -1,0 +1,404 @@
+{
+  "projects": [
+    {
+      "id": "resume",
+      "repo": null,
+      "allowed": true,
+      "title": "Resume",
+      "type": "resume",
+      "company": "Christopher Kenreigh",
+      "role": "Product Design, Product Management, Product Strategy",
+      "period_display": null,
+      "skills": [
+        "Design systems",
+        "Product strategy",
+        "RAG"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null,
+      "local_file": "data/resume.md"
+    },
+    {
+      "id": "japan-case-study",
+      "repo": "tangiblethinking/japan-case-study",
+      "allowed": true,
+      "title": "International Expansion: Japan (0\u21921 case study)",
+      "type": "project",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "Product strategy",
+        "0\u21921"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "director-case-study",
+      "repo": "tangiblethinking/DirectorCaseStudy_UX_Bgoals",
+      "allowed": true,
+      "title": "Director Case Study: UX Business Goals",
+      "type": "project",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "UX strategy"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "infoarchdesign",
+      "repo": "tangiblethinking/infoarchdesign",
+      "allowed": true,
+      "title": "Information Architecture Design",
+      "type": "design",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "Information architecture"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "persongratadata",
+      "repo": "tangiblethinking/persongratadata",
+      "allowed": true,
+      "title": "Persona Data",
+      "type": "design",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "Research",
+        "Personas"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "virtual-labs",
+      "repo": "tangiblethinking/virtualLabs",
+      "allowed": true,
+      "title": "Virtual Labs",
+      "type": "project",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "dls",
+      "repo": "tangiblethinking/DLS",
+      "allowed": true,
+      "title": "Design Language System",
+      "type": "design",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "Design systems"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "ape-x-apple",
+      "repo": "tangiblethinking/ape-x-apple",
+      "allowed": true,
+      "title": "Ape-X Job Search \u2014 Apple HIG Design System",
+      "type": "project",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "AI",
+        "Design systems",
+        "Gemini"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "gemini-job-bot",
+      "repo": "tangiblethinking/gemini-job-bot",
+      "allowed": true,
+      "title": "Gemini Job Bot",
+      "type": "experiment",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "Gemini",
+        "AI"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "ats-x2",
+      "repo": "tangiblethinking/ATS-X2-prod",
+      "allowed": true,
+      "title": "ATS Align X2 multi-agent pipeline",
+      "type": "experiment",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "AI agents",
+        "Gemini"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "modern-checkout",
+      "repo": "tangiblethinking/Moderncheckout",
+      "allowed": true,
+      "title": "Modern Checkout",
+      "type": "design",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "E-commerce",
+        "Checkout UX"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "cms-payload",
+      "repo": "tangiblethinking/CMSPayload",
+      "allowed": true,
+      "title": "Payload CMS UI Catalog",
+      "type": "project",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [
+        "CMS",
+        "Component catalog"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "uxrnd",
+      "repo": "tangiblethinking/UXRND",
+      "allowed": true,
+      "title": "UX R&D",
+      "type": "experiment",
+      "company": null,
+      "role": null,
+      "period_display": null,
+      "skills": [],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": null
+    },
+    {
+      "id": "plexus-u",
+      "repo": "PlexusworldwideUX/Pluses",
+      "allowed": true,
+      "title": "Plexus U: Getting Started",
+      "type": "work",
+      "company": "Plexus Worldwide",
+      "role": "Senior UX Designer / UX Architect",
+      "period_display": "05/2024 \u2013 Present",
+      "skills": [
+        "Onboarding",
+        "Content"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": {
+        "name": "Plexus Worldwide",
+        "color": "#0B3D91",
+        "on_color": "#FFFFFF",
+        "color_dark": "#5B8DEF",
+        "logo": null,
+        "radius": 14
+      }
+    },
+    {
+      "id": "plexus-editor",
+      "repo": "PlexusworldwideUX/Editor",
+      "allowed": true,
+      "title": "Plexus Content Editor",
+      "type": "work",
+      "company": "Plexus Worldwide",
+      "role": "Senior UX Designer / UX Architect",
+      "period_display": "05/2024 \u2013 Present",
+      "skills": [
+        "Enterprise content tools"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": {
+        "name": "Plexus Worldwide",
+        "color": "#0B3D91",
+        "on_color": "#FFFFFF",
+        "color_dark": "#5B8DEF",
+        "logo": null,
+        "radius": 14
+      }
+    },
+    {
+      "id": "plexus-cart-checkout",
+      "repo": "PlexusworldwideUX/Prototypecartandcheckout",
+      "allowed": true,
+      "title": "Plexus Cart & Checkout Prototype",
+      "type": "work",
+      "company": "Plexus Worldwide",
+      "role": "Senior UX Designer / UX Architect",
+      "period_display": "05/2024 \u2013 Present",
+      "skills": [
+        "E-commerce",
+        "Prototyping"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": {
+        "name": "Plexus Worldwide",
+        "color": "#0B3D91",
+        "on_color": "#FFFFFF",
+        "color_dark": "#5B8DEF",
+        "logo": null,
+        "radius": 14
+      }
+    },
+    {
+      "id": "plexus-pdp",
+      "repo": "PlexusworldwideUX/pdp",
+      "allowed": true,
+      "title": "Plexus Product Detail Page",
+      "type": "work",
+      "company": "Plexus Worldwide",
+      "role": "Senior UX Designer / UX Architect",
+      "period_display": "05/2024 \u2013 Present",
+      "skills": [
+        "E-commerce"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": {
+        "name": "Plexus Worldwide",
+        "color": "#0B3D91",
+        "on_color": "#FFFFFF",
+        "color_dark": "#5B8DEF",
+        "logo": null,
+        "radius": 14
+      }
+    },
+    {
+      "id": "plexus-designops",
+      "repo": "PlexusworldwideUX/designoops",
+      "allowed": true,
+      "title": "Plexus DesignOps",
+      "type": "work",
+      "company": "Plexus Worldwide",
+      "role": "Senior UX Designer / UX Architect",
+      "period_display": "05/2024 \u2013 Present",
+      "skills": [
+        "DesignOps",
+        "Design systems"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": {
+        "name": "Plexus Worldwide",
+        "color": "#0B3D91",
+        "on_color": "#FFFFFF",
+        "color_dark": "#5B8DEF",
+        "logo": null,
+        "radius": 14
+      }
+    },
+    {
+      "id": "plexus-personas",
+      "repo": "PlexusworldwideUX/Personastest",
+      "allowed": true,
+      "title": "Plexus Personas",
+      "type": "work",
+      "company": "Plexus Worldwide",
+      "role": "Senior UX Designer / UX Architect",
+      "period_display": "05/2024 \u2013 Present",
+      "skills": [
+        "Research"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": {
+        "name": "Plexus Worldwide",
+        "color": "#0B3D91",
+        "on_color": "#FFFFFF",
+        "color_dark": "#5B8DEF",
+        "logo": null,
+        "radius": 14
+      }
+    },
+    {
+      "id": "plexus-alt-text-ai",
+      "repo": "PlexusworldwideUX/AltTextAI",
+      "allowed": true,
+      "title": "Alt Text AI",
+      "type": "work",
+      "company": "Plexus Worldwide",
+      "role": "Senior UX Designer / UX Architect",
+      "period_display": "05/2024 \u2013 Present",
+      "skills": [
+        "AI",
+        "Accessibility"
+      ],
+      "summary": null,
+      "live_url": null,
+      "figma_url": null,
+      "brand": {
+        "name": "Plexus Worldwide",
+        "color": "#0B3D91",
+        "on_color": "#FFFFFF",
+        "color_dark": "#5B8DEF",
+        "logo": null,
+        "radius": 14
+      }
+    }
+  ]
+}
