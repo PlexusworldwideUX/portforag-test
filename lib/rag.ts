@@ -18,7 +18,7 @@ const post = (url: string, key: string, body: unknown) => fetch(url, { method: "
 export async function embedQuery(q: string): Promise<number[]> {
   return withKey(k => post(`${G}/gemini-embedding-001:embedContent`, k, { content: { parts: [{ text: q }] }, taskType: "RETRIEVAL_QUERY", outputDimensionality: 768 }), async r => (await r.json()).embedding.values);
 }
-export function search(v: number[], k = 6) {
+export function search(v: number[], k = 8) {
   const n = Math.hypot(...v);
   return index().chunks.map(c => ({ c, s: c.v.reduce((a, x, i) => a + x * v[i], 0) / (c.n * n) })).sort((a, b) => b.s - a.s).slice(0, k);
 }
