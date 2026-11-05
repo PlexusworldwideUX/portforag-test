@@ -29,7 +29,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-3xl flex-col px-4 pb-12 sm:px-6">
+    <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-4 pb-12 sm:px-6">
       <header className="sticky top-0 z-20 -mx-4 flex items-center justify-between gap-3 border-b border-black/10 bg-[#f5f5f7]/90 px-4 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-black/70 sm:-mx-6 sm:px-6">
         <Link href="/" className="min-h-11 content-center text-sm font-medium text-blue-600 dark:text-blue-400">
           Home
@@ -43,9 +43,9 @@ export default function ContactPage() {
         </button>
       </header>
 
-      <main className="pt-10">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Contact</h1>
-        <p className="mt-2 text-neutral-500">Say hello — this opens your email client with the message filled in.</p>
+      <main className="pt-10 sm:pt-14">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Contact</h1>
+        <p className="mt-3 text-lg text-neutral-500">Say hello — this opens your email client with the message filled in.</p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4">
           <label className="block">
