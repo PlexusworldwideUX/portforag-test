@@ -6,7 +6,11 @@ const GH = process.env.GITHUB_TOKEN;
 const gh = (p) => fetch(`https://api.github.com/${p}`, { headers: { Accept: "application/vnd.github+json", ...(GH ? { Authorization: `Bearer ${GH}` } : {}) } });
 const strip = (h) => h.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/&nbsp;|&#\d+;|&\w+;/g, " ").replace(/\s+/g, " ").trim();
 async function text(url, ms = 10000) { try { const r = await fetch(url, { signal: AbortSignal.timeout(ms) }); return r.ok ? await r.text() : ""; } catch { return ""; } }
-function chunk(s, size = 1200, overlap = 150) { const out = []; for (let i = 0; i < s.length && out.length < 12; i += size - overlap) out.push(s.slice(i, i + size)); return out; }
+function chunk(s, head, size = 1200, overlap = 150) {
+  const out = [];
+  for (const sec of s.split(/\n(?=#{1,3} )/)) for (let i = 0; i < sec.length && out.length < 16; i += size - overlap) { const t = sec.slice(i, i + size).trim(); if (t.length > 40) out.push(head + "\n" + t); }
+  return out.length ? out : [head];
+}
 let ki = 0;
 async function embed(texts) {
   for (let attempt = 0; attempt < KEYS.length * 2; attempt++) {
@@ -39,7 +43,7 @@ for (const p of projects.filter(p => p.allowed)) {
   delete meta.local_file; delete meta.allowed;
   outProjects.push(meta);
   const head = `Project: ${meta.title}. Company: ${meta.company || "personal"}. Type: ${meta.type}. Skills: ${(meta.skills || []).join(", ")}.`;
-  const parts = chunk((head + "\n" + body).trim());
+  const parts = chunk(body.trim(), head);
   const vecs = await embed(parts);
   parts.forEach((t, i) => chunks.push({ project_id: meta.id, text: t, v: vecs[i] }));
   console.log(`${meta.id}: ${parts.length} chunks`);
