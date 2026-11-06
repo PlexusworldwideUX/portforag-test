@@ -1,0 +1,59 @@
+[
+  {
+    "schema_version": "1.0.0",
+    "id": "job-plexus-worldwide",
+    "kind": "job",
+    "artifact_type": null,
+    "company": "Plexus Worldwide",
+    "position": "Senior UX Designer / UX Architect",
+    "dates": { "start": "2024-05", "end": null },
+    "parent_job_id": null,
+    "title": "Plexus Worldwide — Senior UX Designer / UX Architect",
+    "body": "Principal-level UX architecture at Plexus Worldwide focusing on design system governance, design-to-code pipelines (Figma to React/Next.js), and enterprise content tools. Scaled component reuse through modular UI architecture and automated tokens.",
+    "skills": ["design-systems", "figma-tokens", "design-to-code", "b2b-saas", "nextjs"],
+    "urls": [],
+    "router_path": null,
+    "bucket": "employment",
+    "status": "canonical"
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "plexus-designops",
+    "kind": "artifact",
+    "artifact_type": "case_study",
+    "company": "Plexus Worldwide",
+    "position": "Senior UX Designer / UX Architect",
+    "dates": null,
+    "parent_job_id": "job-plexus-worldwide",
+    "title": "Plexus DesignOps",
+    "body": "Design operations case study covering governance, component reuse, and delivery workflows for the Plexus design system and product teams.",
+    "skills": ["design-ops", "design-systems", "governance"],
+    "urls": [
+      { "label": "Live", "href": "https://design-ops-case-study.vercel.app", "role": "deploy" },
+      { "label": "Router", "href": "https://www.uxapex.com/designops", "role": "router" }
+    ],
+    "router_path": "/designops",
+    "bucket": "employment",
+    "status": "canonical"
+  },
+  {
+    "schema_version": "1.0.0",
+    "id": "gemini-job-bot",
+    "kind": "artifact",
+    "artifact_type": "live_prototype",
+    "company": null,
+    "position": null,
+    "dates": null,
+    "parent_job_id": null,
+    "title": "Gemini Job Bot",
+    "body": "Resume-to-verified-job-search app powered by Gemini and Serper. Personal launched product / experiment in AI-assisted recruiting workflows.",
+    "skills": ["ai", "rag", "product", "nextjs"],
+    "urls": [
+      { "label": "Live", "href": "https://gemini-job-bot.vercel.app", "role": "deploy" },
+      { "label": "Repo", "href": "https://github.com/tangiblethinking/gemini-job-bot", "role": "repo" }
+    ],
+    "router_path": null,
+    "bucket": "launched_product",
+    "status": "canonical"
+  }
+]

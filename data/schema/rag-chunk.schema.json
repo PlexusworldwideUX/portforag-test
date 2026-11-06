@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://portforag-test.local/schema/rag-chunk.schema.json",
+  "title": "RAGChunkContract",
+  "description": "Source-of-truth contract for one indexed RAG chunk. Template authors and the indexer must both satisfy this schema (versioned). Embed primarily uses body; metadata drives retrieval filters and chat cards.",
+  "type": "object",
+  "required": ["schema_version", "id", "kind", "title", "body", "skills", "urls", "bucket", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Bump when breaking the contract; migrate template + indexer together."
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Stable slug id (not UUID), e.g. plexus-designops. Used for IDS: lines and cards."
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["job", "achievement", "artifact"],
+      "description": "Top-level chunk class."
+    },
+    "artifact_type": {
+      "type": ["string", "null"],
+      "enum": ["case_study", "live_prototype", "design", "experiment", "writing", "resume_section", null],
+      "description": "Required when kind is artifact; otherwise null."
+    },
+    "company": {
+      "type": ["string", "null"],
+      "description": "Org name. Required for employment-tied chunks; null for pure PD / launched product when not job-scoped."
+    },
+    "position": {
+      "type": ["string", "null"],
+      "description": "Role title when employment-tied; otherwise null."
+    },
+    "dates": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["start"],
+      "properties": {
+        "start": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$|^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "end": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9]{4}-[0-9]{2}$|^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        }
+      },
+      "description": "YYYY-MM or YYYY-MM-DD. end null means present."
+    },
+    "parent_job_id": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "For achievement/artifact under a job chunk id."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Short human header for cards and chunk headers."
+    },
+    "body": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Primary text embedded for vector search and answer synthesis."
+    },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "description": "Hybrid filter tags (craft, domain, stack, leadership)."
+    },
+    "urls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["href", "role"],
+        "additionalProperties": false,
+        "properties": {
+          "label": { "type": "string" },
+          "href": { "type": "string", "minLength": 1 },
+          "role": {
+            "type": "string",
+            "enum": ["deploy", "repo", "figma", "router", "other"]
+          }
+        }
+      },
+      "description": "Typed links for Open / cards. Prefer deploy for live preview."
+    },
+    "router_path": {
+      "type": ["string", "null"],
+      "pattern": "^/.*$",
+      "description": "AppProto / uxapex path when listed on the site router, e.g. /designops."
+    },
+    "bucket": {
+      "type": "string",
+      "enum": ["employment", "professional_development", "launched_product"],
+      "description": "Audit partition: job history vs PD vs own launched product/app."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["canonical", "superseded"],
+      "description": "Only canonical chunks should be embedded. superseded points at replacement via urls or parent."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "artifact" } }, "required": ["kind"] },
+      "then": {
+        "properties": {
+          "artifact_type": {
+            "type": "string",
+            "enum": ["case_study", "live_prototype", "design", "experiment", "writing", "resume_section"]
+          }
+        },
+        "required": ["artifact_type"]
+      }
+    },
+    {
+      "if": { "properties": { "bucket": { "const": "employment" } }, "required": ["bucket"] },
+      "then": {
+        "properties": {
+          "company": { "type": "string", "minLength": 1 },
+          "position": { "type": "string", "minLength": 1 }
+        },
+        "required": ["company", "position"]
+      }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "job" } }, "required": ["kind"] },
+      "then": {
+        "required": ["dates", "company", "position"],
+        "properties": {
+          "bucket": { "const": "employment" }
+        }
+      }
+    }
+  ]
+}
